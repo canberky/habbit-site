@@ -1,0 +1,18 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Habbit transfer</title>
+<script>
+// Sends the public App Store screenshots to the App Store Connect page that embeds this frame.
+(async () => {
+  const parentOrigin = 'https://appstoreconnect.apple.com';
+  if (window.parent === window) return;
+  const dir = new URLSearchParams(location.search).get('dir') || '6.3';
+  const names = ['1-bugun.png', '2-dolap.png', '3-ilerleme.png', '5-ilk-acilis.png'];
+  const files = [];
+  for (const name of names) {
+    const response = await fetch('screenshots/' + dir + '/' + name, { cache: 'no-store' });
+    files.push({ name, buffer: await response.arrayBuffer() });
+  }
+  window.parent.postMessage({ type: 'habbit-screenshots', files }, parentOrigin, files.map(f => f.buffer));
+})();
+</script>
